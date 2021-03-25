@@ -1,0 +1,73 @@
+---
+# tasks file for ctf_monitor_server
+
+- name: template to /etc/elasticsearch/elasticsearch.yml
+  template:
+    src: elasticsearch_server.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+    owner: root
+    group: elasticsearch
+    mode: 0660
+
+- name: template to /etc/metricbeat/metricbeat.yml
+  template:
+    src: metricbeat_server.j2
+    dest: /etc/metricbeat/metricbeat.yml
+    # owner: root
+    # group: root
+    # mode: 0600
+
+- name: Service elastic start and enable
+  service:
+    name: elasticsearch
+    state: restarted
+    enabled: yes
+
+- name: Service kibana start and enable
+  service:
+    name: kibana
+    state: restarted
+    enabled: yes
+
+- name: Service metricbeat start and enable
+  service:
+    name: metricbeat
+    state: restarted
+    enabled: yes
+
+# - name: Enable metricbeat module 'kibana'
+#   shell:
+#     cmd: metricbeat modules enable kibana
+
+# - name: Sleep for 40 seconds until kibana dashboard is reachable and continue with play
+#   wait_for:
+#     timeout: 40
+
+
+# - name: setup metricbeat
+#   shell:
+#     cmd: metricbeat setup
+
+- name: template to /etc/filebeat/filebeat.yml
+  template:
+    src: filebeat.j2
+    dest: /etc/filebeat/filebeat.yml
+    mode: 0600
+
+# - name: filebeat modules enable kibana
+#   shell:
+#     cmd: filebeat modules enable kibana
+
+# - name: setup filebeat
+#   shell:
+#     cmd: filebeat setup
+
+- name: Service metricbeat restart
+  service:
+    name: metricbeat
+    state: restarted
+
+- name: Service filebeat restart
+  service:
+    name: filebeat
+    state: restarted

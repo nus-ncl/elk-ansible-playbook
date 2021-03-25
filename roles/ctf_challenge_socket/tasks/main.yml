@@ -1,0 +1,233 @@
+---
+# tasks file for ctfsocket
+
+- name: Enable epel-release for system
+  dnf:
+      name:
+        - epel-release
+      state: latest
+
+- name: Install prereq for system
+  dnf:
+      name: 
+      - tar
+      - bzip2
+      - systemd-container
+      - firewalld
+      - python3-firewall
+      - httpd
+      - php
+      - php-mysqlnd
+      - mariadb-server
+      - python3-PyMySQL
+      - python3-mysql
+      - python3-libsemanage
+      - python3-firewall
+      state: latest
+
+- name: Enable and start firewalld
+  systemd:
+      name: firewalld.service
+      state: started
+      enabled: yes
+
+- name: Start mariadb
+  systemd:
+      name: mariadb.service
+      state: started
+      enabled: yes
+
+- name: Set root password on mariadb
+  ignore_errors: yes
+  mysql_user:
+        login_host: 'localhost'
+        login_user: 'root'
+        login_password: ''
+        name: 'root'
+        password: '{{ mysql_root_password }}'
+        state: present
+
+- name: Clear any existing supersqli challenge databases
+  mysql_db:
+      login_host: 'localhost'
+      login_user: 'root'
+      login_password: '{{ mysql_root_password }}'
+      name: 'supersqli'
+      state: absent
+
+- name: Create database for supersqli challenge
+  mysql_db:
+      login_host: 'localhost'
+      login_user: 'root'
+      login_password: '{{ mysql_root_password }}'
+      name: 'supersqli'
+      state: present
+
+- name: Remove user for supersqli challenge
+  mysql_user:
+        login_host: 'localhost'
+        login_user: 'root'
+        login_password: '{{ mysql_root_password }}'
+        name: 'easysqli1'
+        password: '{{ mysql_easysqli_password }}'
+        priv: 'supersqli.*:SELECT'
+        state: absent
+
+- name: Create user for supersqli challenge
+  mysql_user:
+        login_host: 'localhost'
+        login_user: 'root'
+        login_password: '{{ mysql_root_password }}'
+        name: 'easysqli1'
+        password: '{{ mysql_easysqli_password }}'
+        priv: 'supersqli.*:SELECT'
+        state: present
+
+- name: Copy challenge database
+  copy:
+      src: flags/babysqli_flag.sql
+      dest: /tmp/babysqli_flag.sql
+
+- name: Restore challenge database
+  mysql_db:
+        login_host: 'localhost'
+        login_user: 'root'
+        login_password: '{{ mysql_root_password }}'
+        name: 'supersqli'
+        state: import
+        target: /tmp/babysqli_flag.sql
+
+- name: Remove temporary database dump file
+  file:
+      path: /tmp/babysqli_flag.sql
+      state: absent
+
+- name: Allow httpd database selinux
+  seboolean:
+      name: httpd_can_network_connect_db
+      state: yes
+      persistent: yes
+
+- name: Change httpd to listen on 9000/tcp
+  replace:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: 'Listen 80'
+      replace: 'Listen 9000'
+
+- name: Start httpd
+  systemd:
+      name: httpd.service
+      state: started
+      enabled: yes
+
+- name: Enable firewall for 9000/tcp
+  firewalld:
+      port: 9000/tcp
+      permanent: true
+      state: enabled
+  notify: 
+    - Reload firewalld
+
+- name: Copy babysqli php file
+  copy:
+      src: http/index.php
+      dest: /var/www/html/index.php
+      owner: root
+      mode: 0555
+      seuser: system_u
+      serole: object_r
+      setype: httpd_sys_content_t
+
+- name: Modify the credentials in the babysqli php file
+  replace:
+      path: /var/www/html/index.php
+      regexp: 'PLACEHOLDER_EASYSQLI_PASSWORD'
+      replace: '{{ mysql_easysqli_password }}'
+
+- name: Create chroot files on server
+  unarchive:
+      src: ctfroot.tbz
+      dest: /srv/
+
+- name: Setup insecure challenge suid bits
+  file:
+      path: /srv/ctfroot/nqh/insecure/bin/insecure
+      owner: 0
+      group: 0
+      mode: 04555
+      
+- name: Setup extraordinary flag
+  copy:
+      src: flags/cmh_extraordinary_flag.txt
+      dest: /srv/ctfroot/cmh/extraordinary/flag.txt
+      owner: 0
+      group: 0
+      mode: 444
+      
+- name: Setup insecure flag
+  copy:
+      src: flags/nqh_insecure_flag.txt
+      dest: /srv/ctfroot/nqh/insecure/flag.txt
+      owner: 99
+      group: 99
+      mode: 400
+
+- name: Setup tasktracker flag
+  copy:
+      src: flags/dk_tasktracker_flag.txt
+      dest: /srv/ctfroot/dk/tasktracker/flag.txt
+      owner: 600
+      group: 600
+      mode: 444
+
+- name: Setup syscall_phobia flag
+  copy:
+      src: flags/en_syscall_phobia_flag.txt
+      dest: /srv/ctfroot/en/syscall_phobia/flag.txt
+      owner: 600
+      group: 600
+      mode: 444
+      
+- name: Setup FSBS flag
+  copy:
+      src: flags/en_FSBS_flag.txt
+      dest: /srv/ctfroot/en/FSBS/flag.txt
+      owner: 600
+      group: 600
+      mode: 444
+      
+- name: Setup ROPS flag
+  copy:
+      src: flags/en_ROPS_flag.txt
+      dest: /srv/ctfroot/en/ROPS/flag.txt
+      owner: 600
+      group: 600
+      mode: 444
+            
+
+- name: Enable firewall for 9993-9999/tcp
+  firewalld:
+      port: 9993-9999/tcp
+      permanent: true
+      state: enabled
+  notify: 
+    - Reload firewalld
+
+- name: Copy unit files
+  copy:
+      src: units/
+      dest: /etc/systemd/system/
+      owner: root
+      group: root
+  notify:
+      - Reload systemd
+      - Enable dk-tasktracker.socket
+      - Enable en-syscall_phobia.socket
+      - Enable nqh-insecure.socket
+      - Enable cmh-extraordinary.socket
+      - Enable en-FSBS.socket
+      - Enable en-ROPS.socket
+
+
+
+

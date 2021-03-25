@@ -1,0 +1,7 @@
+---
+# vars file for ctfsocket
+
+
+mysql_root_password: CHANGEME_eeH8eeghiH0aengie8ha
+
+mysql_easysqli_password: CHANGEME_niph5songoo3veeJaich

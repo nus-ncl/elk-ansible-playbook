@@ -1,0 +1,71 @@
+---
+# tasks file for ctfsocket
+
+- name: Remove previously installed docker
+  yum:
+      name:
+        - docker 
+        - docker-client
+        - docker-client-latest 
+        - docker-common 
+        - docker-latest 
+        - docker-latest-logrotate 
+        - docker-logrotate 
+        - docker-engine
+      state: absent
+
+- name: Install dependencies
+  yum:
+      name:
+        - yum-utils
+        - systemd-container
+        - firewalld
+      state: latest
+
+- name: Add repository
+  # yum_repository:
+  #   name: docker-ce
+  #   description: docker-ce
+  #   baseurl: https://download.docker.com/linux/centos/
+  shell:
+    cmd: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+- name: Install docker
+  yum:
+      name:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+      state: latest
+      update_cache: yes
+
+- name: Enable and start docker
+  shell:
+    cmd: systemctl start docker
+
+- name: Download docker-compose 
+  uri:
+    # url: https://github.com/docker/compose/releases/download/1.28.2/docker-compose-$(uname -s)-$(uname -m)
+    url: https://github.com/docker/compose/releases/download/1.28.2/docker-compose-Linux-x86_64
+    method: GET
+    dest: /usr/local/bin/docker-compose
+    mode: '0755'
+    creates: /usr/local/bin/docker-compose
+
+- name: Copy docker-compose to /usr/bin/ and set permissions
+  copy:
+    src: /usr/local/bin/docker-compose
+    dest: /usr/bin/docker-compose
+    remote_src: yes
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy local docker challenges to remote server
+  copy:
+    src: babyNote
+    dest: /home/centos/
+    remote_src: no
+    owner: centos
+    group: centos
+    mode: '0755'

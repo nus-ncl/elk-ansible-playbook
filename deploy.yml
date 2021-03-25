@@ -1,0 +1,22 @@
+---
+# Deployment
+- hosts: ELK
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - role: ctf_monitor_metric_server
+      tags: ELK_Server
+    - role: ctf_monitor_log_server
+      tags: ELK_Server
+
+- hosts: Client
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - role: ctf_monitor_metric_client
+      tags: [ ELK_Client ]
+    - role: ctf_monitor_log_client
+      tags: [ ELK_Client ]
+

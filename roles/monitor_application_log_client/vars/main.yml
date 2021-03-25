@@ -1,0 +1,9 @@
+---
+# vars file for ctfsocket
+application_log_path: "/home/ws/application.log"
+application_log_tag: "ws-application-log:"
+application_log_state_file: "stat=ws-application-log"
+application_log_severity: "info" 
+application_log_facility: "local1"
+
+

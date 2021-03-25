@@ -1,0 +1,12 @@
+[Unit]
+Description=CMH extraordinary Socket
+PartOf=cmh-extraordinary@.service
+
+[Socket]
+ListenStream=0.0.0.0:9993
+Accept=yes
+MaxConnections=64
+RemoveOnStop=yes
+
+[Install]
+WantedBy=sockets.target

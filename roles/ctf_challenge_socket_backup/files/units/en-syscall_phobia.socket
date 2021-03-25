@@ -1,0 +1,12 @@
+[Unit]
+Description=EN syscall phobia Socket
+PartOf=en-syscall_phobia@.service
+
+[Socket]
+ListenStream=0.0.0.0:9998
+Accept=yes
+MaxConnections=64
+RemoveOnStop=yes
+
+[Install]
+WantedBy=sockets.target

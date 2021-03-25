@@ -1,0 +1,13 @@
+---
+# tasks file for ctf_monitor_server
+
+- name: template to /etc/rsyslog.conf
+  template:
+    src: rysylog.conf.j2
+    dest: /etc/rsyslog.conf
+
+- name: Service rsyslog restart
+  service:
+    name: rsyslog
+    state: restarted
+

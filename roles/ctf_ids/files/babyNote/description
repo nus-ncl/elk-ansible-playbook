@@ -1,0 +1,4 @@
+Hey... DSO is creating a notes app.. but the admin forget to remove some secrets
+We leak part of the source code. Can you find it out?
+
+download link: app.py

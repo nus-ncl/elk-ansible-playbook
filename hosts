@@ -1,0 +1,50 @@
+[all:vars]
+ansible_connection=ssh
+ansible_ssh_private_key_file=/Users/hkwany/.ssh/Key_For_Kang_Macbook.pem
+monitor_server_private_ip=172.31.25.68
+
+[challenge_servers_socket]
+# comment using '#'
+# 54.169.117.111
+# 3.1.6.95
+# 54.169.29.9
+# 18.139.219.163
+# 54.169.124.79
+
+[challenge_servers_docker]
+# comment using '#'
+# 3.1.217.135
+# 54.255.155.200
+# 54.254.181.9
+# 13.250.45.195
+# 54.255.163.58
+
+[challenge_servers_socket:vars]
+ansible_user=centos
+ansible_python_interpreter=/usr/libexec/platform-python
+
+[challenge_servers_docker:vars]
+ansible_user=centos
+ansible_python_interpreter=/usr/libexec/platform-python
+
+[monitor_server]
+# 13.213.0.176
+
+[monitor_server:vars]
+ansible_user=ubuntu
+
+[backup_servers_docker]
+# comment using '#'
+13.229.92.153
+
+[backup_servers_docker:vars]
+ansible_user=centos
+ansible_python_interpreter=/usr/libexec/platform-python
+
+[backup_servers_socket]
+# comment using '#'
+54.251.138.191
+
+[backup_servers_socket:vars]
+ansible_user=centos
+ansible_python_interpreter=/usr/libexec/platform-python

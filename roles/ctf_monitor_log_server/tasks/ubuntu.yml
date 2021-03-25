@@ -1,0 +1,60 @@
+---
+# tasks file for ctf_monitor_server
+
+- name: Install dependencies and softwares
+  apt:
+      name:
+        - default-jre
+        - logstash
+      state: present
+      update_cache: yes
+
+- name: Copy to /etc/rsyslog.conf
+  copy:
+    src: rsyslog_server.conf
+    dest: /etc/rsyslog.conf
+    # owner: root
+    # group: elasticsearch
+    # mode: 0660
+
+- name: Copy daily rotation configuration file to /etc/logrotate.conf
+  copy:
+    src: logrotate_daily.conf
+    dest: /etc/logrotate.conf
+
+- name: Copy to /etc/rsyslog.d/50-default.conf
+  copy:
+    src: 50-default_server.conf
+    dest: /etc/rsyslog.d/50-default.conf
+
+- name: Copy to /etc/rsyslog.d/01-json-template.conf
+  copy:
+    src: 01-json-template_server.conf
+    dest: /etc/rsyslog.d/01-json-template.conf
+
+- name: template to /etc/rsyslog.d/60-output.conf
+  template:
+    src: 60-output_server.conf.j2
+    dest: /etc/rsyslog.d/60-output.conf
+
+- name: template to /etc/logstash/conf.d/logstash.conf
+  template:
+    src: logstash_server.conf.j2
+    dest: /etc/logstash/conf.d/logstash.conf
+
+- name: Service logstash start
+  service:
+    name: logstash
+    state: started
+    enabled: yes
+
+- name: restart rsyslog
+  service:
+    name: rsyslog
+    state: restarted
+
+- name: Service logstash restart
+  service:
+    name: logstash
+    state: restarted
+

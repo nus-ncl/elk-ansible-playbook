@@ -1,0 +1,22 @@
+---
+
+# Update
+- hosts: ELK
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - role: update_ctf_monitor_metric_server
+      tags: update
+    - role: update_ctf_monitor_log_server
+      tags: update
+
+- hosts: Client
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - role: update_ctf_monitor_metric_client
+      tags: update
+    - role: update_ctf_monitor_log_client
+      tags: update

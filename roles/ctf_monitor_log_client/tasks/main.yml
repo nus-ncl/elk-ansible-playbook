@@ -1,0 +1,13 @@
+---
+# tasks
+
+- name: template to /etc/rsyslog.d/50-default.conf
+  template:
+    src: 50-default_client.conf.j2
+    dest: /etc/rsyslog.d/50-default.conf
+
+- name: Service rsyslog restart
+  service:
+    name: rsyslog
+    state: restarted
+

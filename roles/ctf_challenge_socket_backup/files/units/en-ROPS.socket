@@ -1,0 +1,12 @@
+[Unit]
+Description=EN ROPS Socket
+PartOf=en-ROPS@.service
+
+[Socket]
+ListenStream=0.0.0.0:9995
+Accept=yes
+MaxConnections=64
+RemoveOnStop=yes
+
+[Install]
+WantedBy=sockets.target

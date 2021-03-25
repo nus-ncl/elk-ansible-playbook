@@ -1,0 +1,8 @@
+---
+- name: For centos8 version
+  import_tasks: centos8.yml
+  when: (ansible_facts['distribution']|lower == "centos" and ansible_facts['distribution_major_version'] == "8")
+
+- name: For ubuntu version
+  import_tasks: ubuntu.yml
+  when: (ansible_facts['distribution']|lower == "ubuntu" and ansible_facts['distribution_major_version'] == "20")

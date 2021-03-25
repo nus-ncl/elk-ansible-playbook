@@ -1,0 +1,12 @@
+[Unit]
+Description=DK tasktracker Socket
+PartOf=dk-tasktracker@.service
+
+[Socket]
+ListenStream=0.0.0.0:9997
+Accept=yes
+MaxConnections=64
+RemoveOnStop=yes
+
+[Install]
+WantedBy=sockets.target

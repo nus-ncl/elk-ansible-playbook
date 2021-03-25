@@ -1,0 +1,7 @@
+- Install centos8 (not stream, please)
+- adjust hosts to target your install
+- ssh in at least once
+- run ansible-playbook -i hosts deploy.yml  -v
+- nc <target> 9999
+- nc <target> 9998
+- nc <target> 9997

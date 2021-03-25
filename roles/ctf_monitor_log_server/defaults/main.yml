@@ -1,0 +1,3 @@
+---
+# defaults
+logstash_port: 10514

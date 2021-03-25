@@ -1,0 +1,28 @@
+---
+# tasks file for ctf_monitor_server
+
+- name: Add Key
+  shell:
+    cmd: rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
+
+- name: Add repository
+  copy:
+    src: elastic.repo 
+    dest: /etc/yum.repos.d/elastic.repo
+
+- name: Install metricbeat
+  yum:
+    name: metricbeat
+    state: present
+
+- name: template to /etc/metricbeat/metricbeat.yml
+  template:
+    src: metricbeat_client.j2
+    dest: /etc/metricbeat/metricbeat.yml
+
+- name: Service metricbeat start and enable
+  service:
+    name: metricbeat
+    state: restarted
+    enabled: yes
+

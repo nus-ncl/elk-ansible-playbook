@@ -1,0 +1,8 @@
+ctf_monitor_metric_server:
+    suits only for ubuntu, installing elasticsearch, kibana, metricbeat, making metricbeat to redirect all data locally and remotely to kibana dashboard
+ctf_monitor_metric_client:
+    has both centos8 and ubuntu version, installing metricbeat, setting metribeat.yml to configure elasticsearch database as logserver:9200, and starting metricbeat service 
+ctf_monitor_log_server:
+    suits only for ubuntu, installing default-jre and logstash, open logstash collection port 514
+ctf_monitor_log_client:
+    is universal, configuring /etc/rsyslog.d/50-default.conf to redirect its own syslog to remote logserver and restarting service rsyslog
