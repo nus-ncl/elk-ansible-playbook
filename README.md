@@ -1,5 +1,6 @@
 # ELK Setup Playbook
 =========
+
 A playbook used by Ansible to setup ELK both Server and Client.
 
 ## Installation
@@ -22,8 +23,9 @@ $ sudo apt install ansible
 --------------
 
 ### For ELK_Server
+
     '''bash
-    at least:
+    (At least)
     2 CPU
     4GB Memory
     Large disk space
@@ -33,13 +35,17 @@ $ sudo apt install ansible
 --------------
 1. Spin up all virtual machines. (Recommend using [Vagrant](https://www.vagrantup.com/))
 2. Copy public key to all virtual machines 
+
     '''bash
     ssh-copy-id [username]@[virtual_machine_ip]
     '''
+
 3. Check connectivity
+
     '''bash
     ansible -i inventory -m ping (all pong means connectivity is all good)
     '''
+
 4. Customize your inventory
 5. Run run.sh to set up your ELK Stack!
 6. Go to Kibana WebUI to create Logstash index
