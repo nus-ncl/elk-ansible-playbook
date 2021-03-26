@@ -1,6 +1,5 @@
 ---
-# Deployment
-- hosts: ELK
+- hosts: ELK_Server
   become: yes
   become_user: root
   become_method: sudo
@@ -10,7 +9,7 @@
     - role: ctf_monitor_log_server
       tags: ELK_Server
 
-- hosts: Client
+- hosts: ELK_Client
   become: yes
   become_user: root
   become_method: sudo
