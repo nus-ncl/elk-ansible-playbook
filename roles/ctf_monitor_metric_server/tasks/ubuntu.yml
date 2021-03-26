@@ -1,88 +1,88 @@
 ---
 # tasks 
 
-- name: Add Key
-  shell:
-    cmd: wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-
-- name: Add repository
-  shell:
-    cmd: echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
-
-- name: Install dependencies and softwares
-  apt:
-      name:
-        - net-tools
-        - apt-transport-https
-        - elasticsearch
-        - kibana
-        - metricbeat
-      state: present
-      update_cache: yes
-
-- name: template to /etc/elasticsearch/elasticsearch.yml
-  template:
-    src: elasticsearch_server.j2
-    dest: /etc/elasticsearch/elasticsearch.yml
-    owner: root
-    group: elasticsearch
-    mode: 0660
-
-- name: template to /etc/kibana/kibana.yml
-  template:
-    src: kibana_server.j2
-    dest: /etc/kibana/kibana.yml
-    owner: root
-    group: kibana
-    mode: 0660
-
-- name: template to /etc/metricbeat/metricbeat.yml
-  template:
-    src: metricbeat_server.j2
-    dest: /etc/metricbeat/metricbeat.yml
-    # owner: root
-    # group: root
-    # mode: 0600
-
-- name: Service elastic start and enable
-  service:
-    name: elasticsearch
-    state: started
-    enabled: yes
-
-- name: Service kibana start and enable
-  service:
-    name: kibana
-    state: started
-    enabled: yes
-
-- name: Service metricbeat start and enable
-  service:
-    name: metricbeat
-    state: started
-    enabled: yes
-
-- name: Enable metricbeat module kibana
-  shell:
-    cmd: metricbeat modules enable kibana
-
-- name: Sleep for 40 seconds until kibana dashboard is reachable and continue with play
-  wait_for:
-    timeout: 40
-
-- name: setup metricbeat
-  shell:
-    cmd: metricbeat setup
+#- name: Add Key
+#  shell:
+#    cmd: wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+#
+#- name: Add repository
+#  shell:
+#    cmd: echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+#
+#- name: Install dependencies and softwares
+#  apt:
+#      name:
+#        - net-tools
+#        - apt-transport-https
+#        - elasticsearch
+#        - kibana
+#        - metricbeat
+#      state: present
+#      update_cache: yes
+#
+#- name: template to /etc/elasticsearch/elasticsearch.yml
+#  template:
+#    src: elasticsearch_server.j2
+#    dest: /etc/elasticsearch/elasticsearch.yml
+#    owner: root
+#    group: elasticsearch
+#    mode: 0660
+#
+#- name: template to /etc/kibana/kibana.yml
+#  template:
+#    src: kibana_server.j2
+#    dest: /etc/kibana/kibana.yml
+#    owner: root
+#    group: kibana
+#    mode: 0660
+#
+#- name: template to /etc/metricbeat/metricbeat.yml
+#  template:
+#    src: metricbeat_server.j2
+#    dest: /etc/metricbeat/metricbeat.yml
+#    # owner: root
+#    # group: root
+#    # mode: 0600
+#
+#- name: Service elastic start and enable
+#  service:
+#    name: elasticsearch
+#    state: started
+#    enabled: yes
+#
+#- name: Service kibana start and enable
+#  service:
+#    name: kibana
+#    state: started
+#    enabled: yes
+#
+#- name: Service metricbeat start and enable
+#  service:
+#    name: metricbeat
+#    state: started
+#    enabled: yes
+#
+#- name: Enable metricbeat module kibana
+#  shell:
+#    cmd: metricbeat modules enable kibana
+#
+#- name: Sleep for 40 seconds until kibana dashboard is reachable and continue with play
+#  wait_for:
+#    timeout: 40
+#
+#- name: setup metricbeat
+#  shell:
+#    cmd: metricbeat setup
 
 - name: Download filebeat
   shell:
     cmd: curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.11.1-amd64.deb
-    chdir: /home/ubuntu
+    chdir: '{{ ansible_env.HOME }}'
 
 - name: Dpkg filebeat
   shell:
     cmd: dpkg -i filebeat-7.11.1-amd64.deb
-    chdir: /home/ubuntu
+    chdir: '{{ ansible_env.HOME }}'
 
 - name: template to /etc/filebeat/filebeat.yml
   template:

@@ -4,7 +4,7 @@
 #$outchannel mysyslog,/var/log/syslog,1073741824
 
 
-*.*                         @{{ monitor_server_private_ip }}:514
+*.*                         @{{ ELK_Server_Private_IP }}:514
 #
 # First some standard log files.  Log by facility.
 #
