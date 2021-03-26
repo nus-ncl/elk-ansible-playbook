@@ -34,15 +34,15 @@ Large Disk Space
 -  Spin up all virtual machines. (Recommend using [Vagrant](https://www.vagrantup.com/))
 -  Copy public key to all virtual machines 
 
-```bash
-ssh-copy-id [username]@[virtual_machine_ip]
-```
+  ```bash
+  ssh-copy-id [username]@[virtual_machine_ip]
+  ```
 
 -  Check connectivity
 
-```bash
-ansible -i inventory -m ping (all pong means connectivity is all good)
-```
+  ```bash
+  ansible -i inventory -m ping (all pong means connectivity is all good)
+  ```
 
 -  Customize your inventory
 -  Run run.sh to set up your ELK Stack!
