@@ -4,9 +4,9 @@
   become_user: root
   become_method: sudo
   roles:
-    - role: ctf_monitor_metric_server
+    - role: elk_monitor_metric_server
       tags: ELK_Server
-    - role: ctf_monitor_log_server
+    - role: elk_monitor_log_server
       tags: ELK_Server
 
 - hosts: ELK_Client
@@ -14,8 +14,8 @@
   become_user: root
   become_method: sudo
   roles:
-    - role: ctf_monitor_metric_client
+    - role: elk_monitor_metric_client
       tags: [ ELK_Client ]
-    - role: ctf_monitor_log_client
+    - role: elk_monitor_log_client
       tags: [ ELK_Client ]
 

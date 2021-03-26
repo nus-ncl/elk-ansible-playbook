@@ -1,0 +1,130 @@
+---
+# tasks 
+
+- name: Add Key
+  shell:
+    cmd: wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+
+- name: Add repository
+  shell:
+    cmd: echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+
+- name: Install dependencies and softwares
+  apt:
+      name:
+        - net-tools
+        - apt-transport-https
+        - default-jre
+        - elasticsearch
+        - logstash
+        - kibana
+        - metricbeat
+      state: present
+      update_cache: yes
+
+- name: template to /etc/elasticsearch/elasticsearch.yml
+  template:
+    src: elasticsearch_server.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+    owner: root
+    group: elasticsearch
+    mode: 0660
+
+- name: template to /etc/kibana/kibana.yml
+  template:
+    src: kibana_server.j2
+    dest: /etc/kibana/kibana.yml
+    owner: root
+    group: kibana
+    mode: 0660
+
+- name: template to /etc/metricbeat/metricbeat.yml
+  template:
+    src: metricbeat_server.j2
+    dest: /etc/metricbeat/metricbeat.yml
+    # owner: root
+    # group: root
+    # mode: 0600
+- name: Copy to /etc/rsyslog.conf
+  copy:
+    src: rsyslog_server.conf
+    dest: /etc/rsyslog.conf
+    # owner: root
+    # group: elasticsearch
+    # mode: 0660
+
+- name: Copy daily rotation configuration file to /etc/logrotate.conf
+  copy:
+    src: logrotate_daily.conf
+    dest: /etc/logrotate.conf
+
+- name: Copy to /etc/rsyslog.d/50-default.conf
+  copy:
+    src: 50-default_server.conf
+    dest: /etc/rsyslog.d/50-default.conf
+
+- name: Copy to /etc/rsyslog.d/01-json-template.conf
+  copy:
+    src: 01-json-template_server.conf
+    dest: /etc/rsyslog.d/01-json-template.conf
+
+- name: template to /etc/rsyslog.d/60-output.conf
+  template:
+    src: 60-output_server.conf.j2
+    dest: /etc/rsyslog.d/60-output.conf
+
+- name: Copy to /etc/logstash/conf.d/logstash.conf
+  copy:
+    src: logstash_server.conf
+    dest: /etc/logstash/conf.d/logstash.conf
+
+- name: Service elastic start and enable
+  service:
+    name: elasticsearch
+    state: started
+    enabled: yes
+
+- name: Service kibana start and enable
+  service:
+    name: kibana
+    state: started
+    enabled: yes
+
+- name: Service metricbeat start and enable
+  service:
+    name: metricbeat
+    state: started
+    enabled: yes
+
+- name: Enable metricbeat module kibana
+  shell:
+    cmd: metricbeat modules enable kibana
+
+- name: Sleep for 40 seconds until kibana dashboard is reachable and continue with play
+  wait_for:
+    timeout: 40
+
+- name: setup metricbeat
+  shell:
+    cmd: metricbeat setup
+
+- name: Service metricbeat restart
+  service:
+    name: metricbeat
+    state: restarted
+
+- name: Service logstash start
+  service:
+    name: logstash
+    state: started
+    enabled: yes
+
+- name: restart rsyslog
+  service:
+    name: rsyslog
+    state: restarted
+
+- name: Service logstash restart
+  service:
+    name: logstash
+    state: restarted

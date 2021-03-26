@@ -1,0 +1,30 @@
+---
+# tasks 
+- name: Download filebeat
+  shell:
+    cmd: curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.11.1-amd64.deb
+    chdir: '{{ ansible_env.HOME }}'
+
+- name: Dpkg filebeat
+  shell:
+    cmd: dpkg -i filebeat-7.11.1-amd64.deb
+    chdir: '{{ ansible_env.HOME }}'
+
+- name: template to /etc/filebeat/filebeat.yml
+  template:
+    src: filebeat.j2
+    dest: /etc/filebeat/filebeat.yml
+    mode: 0600
+
+- name: filebeat modules enable kibana
+  shell:
+    cmd: filebeat modules enable kibana
+
+- name: setup filebeat
+  shell:
+    cmd: filebeat setup
+
+- name: Service filebeat restart
+  service:
+    name: filebeat
+    state: restarted
