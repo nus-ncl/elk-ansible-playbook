@@ -1,5 +1,0 @@
-1. Spin up all virtual machines.
-2. copy public key to all virtual machines (ssh-copy-id vagrant@192.168.100.2)
-3. ansible -i inventory -m ping (all pong means connectivity is all good)
-4. For ELK_Server, at least 2 CPU, 4GB Memory, large disk space
-5. For logstash, create the index in kibana.
