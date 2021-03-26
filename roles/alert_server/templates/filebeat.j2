@@ -176,7 +176,7 @@ setup.kibana:
 # ---------------------------- Elasticsearch Output ----------------------------
 output.elasticsearch:
   # Array of hosts to connect to.
-  hosts: ["{{ ansible_facts['default_ipv4']['address'] }}:9200"]
+  hosts: ["{{ ELK_Server_Private_IP }}:9200"]
 
   # Protocol - either `http` (default) or `https`.
   #protocol: "https"

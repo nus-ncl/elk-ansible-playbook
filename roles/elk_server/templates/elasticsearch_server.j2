@@ -54,7 +54,7 @@ path.logs: /var/log/elasticsearch
 #
 # network.host: 192.168.0.1
 network.bind_host: 0.0.0.0
-network.publish_host: {{ ansible_facts['default_ipv4']['address'] }}
+network.publish_host: {{ ELK_Server_Private_IP }}
 #
 # Set a custom port for HTTP:
 #

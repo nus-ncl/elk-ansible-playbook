@@ -5,7 +5,7 @@
 
 input {
   udp {
-    host => "{{ ansible_facts['default_ipv4']['address'] }}"
+    host => "{{ ELK_Server_Private_IP }}"
     port => 10514
     codec => "json"
     type => "rsyslog"
@@ -23,7 +23,7 @@ filter { }
 output {
   if [type] == "rsyslog" {
     elasticsearch {
-      hosts => [ "{{ ansible_facts['default_ipv4']['address'] }}:9200" ]
+      hosts => [ "{{ ELK_Server_Private_IP }}:9200" ]
     }
   }
 }

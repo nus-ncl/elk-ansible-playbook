@@ -45,6 +45,7 @@
     # owner: root
     # group: root
     # mode: 0600
+
 - name: Copy to /etc/rsyslog.conf
   copy:
     src: rsyslog_server.conf
@@ -73,9 +74,9 @@
     src: 60-output_server.conf.j2
     dest: /etc/rsyslog.d/60-output.conf
 
-- name: Copy to /etc/logstash/conf.d/logstash.conf
-  copy:
-    src: logstash_server.conf
+- name: Template to /etc/logstash/conf.d/logstash.conf
+  template:
+    src: logstash_server.conf.j2
     dest: /etc/logstash/conf.d/logstash.conf
 
 - name: Service elastic start and enable
