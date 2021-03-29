@@ -61,6 +61,30 @@ Large Disk Space
 
 -  Go to Kibana WebUI to create Logstash index by opening this URL `http://[server_machine_ip]:5601`
 
+## Application Log Redirection
+--------------
+If you want to see application logs of client machine in Kibana, you should redirect them by adding these lines in /etc/rsyslog.conf
+
+(Take ws & sio application log as examples)
+
+And then restart rsyslogd
+
+```bash
+$ModLoad imfile # needs to be done just once
+$InputFileName /home/ws/application.log
+$InputFileTag ws-application-log:
+$InputFileStateFile stat-ws-application-log
+$InputFileSeverity info
+$InputFileFacility local1
+$InputRunFileMonitor
+
+$InputFileName /home/sio/application.log
+$InputFileTag sio-application-log:
+$InputFileStateFile stat-sio-application-log
+$InputFileSeverity info
+$InputFileFacility local2
+$InputRunFileMonitor
+```
 
 ## Contributor
 --------------
