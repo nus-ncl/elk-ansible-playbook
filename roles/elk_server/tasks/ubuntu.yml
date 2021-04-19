@@ -11,16 +11,17 @@
 
 - name: Install dependencies and softwares
   apt:
-      name:
-        - net-tools
-        - apt-transport-https
-        - default-jre
-        - elasticsearch
-        - logstash
-        - kibana
-        - metricbeat
-      state: present
-      update_cache: yes
+    name:
+      - net-tools
+      - apt-transport-https
+      - default-jre
+      - elasticsearch
+      - logstash
+      - kibana
+      - metricbeat
+      - zip
+    state: present
+    update_cache: yes
 
 - name: template to /etc/elasticsearch/elasticsearch.yml
   template:
@@ -129,3 +130,4 @@
   service:
     name: logstash
     state: restarted
+
