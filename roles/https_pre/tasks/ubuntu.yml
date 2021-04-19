@@ -34,7 +34,7 @@
   shell:
     cmd: unzip /tmp/certs.zip -d /tmp/certs
 
-- name: copy certs&keys to elasticsearch
+- name: copy certs & keys to elasticsearch
   copy:
     src: /tmp/certs
     dest: /etc/elasticsearch/certs
