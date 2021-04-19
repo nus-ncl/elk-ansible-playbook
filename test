@@ -1,5 +1,6 @@
 [all:vars]
 ansible_connection=ssh
+# https=false
 ELK_Server_Private_IP=192.168.100.6
 
 [ELK_Server]
@@ -10,9 +11,10 @@ ansible_user=vagrant
 
 [ELK_Client]
 # 192.168.100.3
-# 192.168.100.4
 192.168.100.7
+# 192.168.100.5
 
 [ELK_Client:vars]
 ansible_user=vagrant
 
+cat: a: No such file or directory

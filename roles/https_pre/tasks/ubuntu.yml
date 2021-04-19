@@ -1,6 +1,12 @@
 ---
 # tasks 
-
+- name: install zip
+  apt: 
+    name:
+      - zip
+    state: present
+    update_cache: yes
+ 
 - name: add line to /etc/hosts
   lineinfile:
     path: /etc/hosts
@@ -28,11 +34,11 @@
   shell:
     cmd: unzip /tmp/certs.zip -d /tmp/certs
 
-# - name: Create a certs directory if it does not exist
-#   file:
-#     path: /etc/elasticsearch/certs
-#     state: directory
-#     mode: '0755'
+- name: copy certs&keys to elasticsearch
+  copy:
+    src: /tmp/certs
+    dest: /etc/elasticsearch/certs
+
 - name: setup random passwords
   shell:
     cmd: /usr/share/elasticsearch/bin/elasticsearch-setup-passwords auto -u "https://elk-server.elastic.com:9200" > /tmp/passwords 2>&1
