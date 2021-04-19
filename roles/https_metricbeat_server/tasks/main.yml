@@ -1,0 +1,4 @@
+---
+- name: For ubuntu version
+  import_tasks: ubuntu.yml
+  when: (ansible_facts['distribution']|lower == "ubuntu" and ansible_facts['distribution_major_version'] == "20")

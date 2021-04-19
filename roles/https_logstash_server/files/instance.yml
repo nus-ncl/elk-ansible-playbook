@@ -1,0 +1,7 @@
+instances:
+  - name: 'elk-server'
+    dns: [ 'elk-server.elastic.com' ]
+  - name: 'my-kibana'
+    dns: [ 'kibana.local' ]
+  - name: 'my-logstash'
+    dns: [ 'logstash.local' ]

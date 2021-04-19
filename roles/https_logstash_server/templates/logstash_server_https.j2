@@ -1,0 +1,11 @@
+node.name: logstash.local
+path.data: /var/lib/logstash
+path.logs: /var/log/logstash
+path.config: /etc/logstash/conf.d/*.conf
+pipeline.ordered: auto
+
+xpack.monitoring.enabled: true
+xpack.monitoring.elasticsearch.username: logstash_system
+xpack.monitoring.elasticsearch.password: '{{ logstash_system_password }}'
+xpack.monitoring.elasticsearch.hosts: [ 'https://elk-server.elastic.com:9200' ]
+xpack.monitoring.elasticsearch.ssl.certificate_authority: /etc/logstash/certs/ca/ca.crt

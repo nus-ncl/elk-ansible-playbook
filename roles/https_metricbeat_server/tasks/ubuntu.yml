@@ -1,0 +1,21 @@
+---
+# tasks 
+- name: copy certs & keys to metricbeat
+  copy:
+    src: /tmp/certs
+    dest: /etc/metricbeat/
+    remote_src: yes
+
+- name: template to metricbeat.yml of https
+  template:
+    src: metricbeat_server_https.j2
+    dest: /etc/metricbeat/metricbeat.yml
+
+- name: setup metricbeat
+  shell:
+    cmd: metricbeat setup
+
+- name: Service metricbeat restart
+  service:
+    name: metricbeat
+    state: restarted
