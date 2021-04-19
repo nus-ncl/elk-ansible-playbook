@@ -21,7 +21,7 @@
     name: rsyslog
     state: restarted
 
-- name: Service logstash restart
-  service:
-    name: logstash
-    state: restarted
+#- name: Service logstash restart
+#  service:
+#    name: logstash
+#    state: restarted
