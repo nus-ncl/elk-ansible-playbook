@@ -8,8 +8,8 @@
 
 - name: template to kibana.yml of https
   template:
-    src: elasticsearch_server_https.j2
-    dest: /etc/elasticsearch/elasticsearch.yml
+    src: kibana_server_https.j2
+    dest: /etc/kibana/kibana.yml
 
 - name: restart kibana
   service:
