@@ -37,8 +37,19 @@
 - name: copy certs & keys to elasticsearch
   copy:
     src: /tmp/certs
-    dest: /etc/elasticsearch/certs
+    dest: /etc/elasticsearch/
+    remote_src: yes
+
+- name: template to elasticsearch.yml of https
+  template:
+    src: elasticsearch_server_https.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+
+- name: restart elasticsearch
+  service:
+    name: elasticsearch
+    state: restarted
 
 - name: setup random passwords
   shell:
-    cmd: /usr/share/elasticsearch/bin/elasticsearch-setup-passwords auto -u "https://elk-server.elastic.com:9200" > /tmp/passwords 2>&1
+    cmd: echo 'y' | /usr/share/elasticsearch/bin/elasticsearch-setup-passwords auto -u "https://elk-server.elastic.com:9200" > /tmp/passwords 2>&1
