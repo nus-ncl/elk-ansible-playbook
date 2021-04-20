@@ -1,5 +1,5 @@
 ---
-# setp1
+# step 1
 - hosts: ELK_Server
   become: yes
   become_user: root
@@ -18,7 +18,7 @@
     - role: metric_client
       tags: [ ELK_Client, step1 ]
 
-# setp2
+# step 2
 - hosts: ELK_Server
   become: yes
   become_user: root
@@ -27,7 +27,7 @@
     - role: https_elasticsearch_server
       tags: [ ELK_Server, step2 ]
 
-# step3
+# step 3
 - hosts: ELK_Server
   become: yes
   become_user: root
@@ -52,7 +52,7 @@
     - role: https_metricbeat_server
       tags: [ ELK_Server, step3 ]
 
-# step4
+# step 4
 - hosts: ELK_Client
   become: yes
   become_user: root
