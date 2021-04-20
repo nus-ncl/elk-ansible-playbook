@@ -81,7 +81,9 @@ Large Disk Space ( > 80 GB for the Data)
   scp -r [username]@[ELK_Server]:/tmp/certs /tmp/
   scp -r [username]@[ELK_Server]:/tmp/passwords /tmp/
   ```
-
+  > Plz backup your directory `certs` and file `passwords` at a safe and persistent place. Otherwise, all the content 
+  > in /tmp directory will be lost after the next reboot
+  > 
 ### Step 3: Modify the passwords and Configure Kibana to use HTTP in the ELK_Server
 
 - According to the `passwords` file generated in the previous step, replace the corresponding passwords at:
