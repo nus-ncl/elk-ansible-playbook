@@ -1,11 +1,12 @@
 ---
+# step 1
 - hosts: ELK_Server
   become: yes
   become_user: root
   become_method: sudo
   roles:
     - role: elk_server
-      tags: ELK_Server
+      tags: [ELK_Server, step1 ]
 
 - hosts: ELK_Client
   become: yes
@@ -13,7 +14,50 @@
   become_method: sudo
   roles:
     - role: log_client
-      tags: [ ELK_Client ]
+      tags: [ ELK_Client, step1 ]
     - role: metric_client
-      tags: [ ELK_Client ]
+      tags: [ ELK_Client, step1 ]
+
+# step 2
+- hosts: ELK_Server
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - role: https_elasticsearch_server
+      tags: [ ELK_Server, step2 ]
+
+# step 3
+- hosts: ELK_Server
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - role: https_kibana_server
+      tags: [ ELK_Server, step3 ]
+
+- hosts: ELK_Server
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - role: https_logstash_server
+      tags: [ ELK_Server, step3 ]
+
+- hosts: ELK_Server
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - role: https_metricbeat_server
+      tags: [ ELK_Server, step3 ]
+
+# step 4
+- hosts: ELK_Client
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - role: https_metricbeat_client
+      tags: [ ELK_Client, step4 ]
 

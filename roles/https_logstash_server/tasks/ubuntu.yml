@@ -1,0 +1,27 @@
+---
+# tasks 
+- name: copy certs & keys to logstash
+  copy:
+    src: /tmp/certs
+    dest: /etc/logstash/
+    remote_src: yes
+
+- name: template to logstash.yml of https
+  template:
+    src: logstash_server_https.j2
+    dest: /etc/logstash/logstash.yml
+
+- name: template to logstash.conf of https
+  template:
+    src: logstash_server_conf_https.j2
+    dest: /etc/logstash/conf.d/logstash.conf
+
+- name: restart rsyslog
+  service:
+    name: rsyslog
+    state: restarted
+
+#- name: Service logstash restart
+#  service:
+#    name: logstash
+#    state: restarted

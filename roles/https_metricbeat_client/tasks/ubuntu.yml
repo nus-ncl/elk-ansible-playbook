@@ -1,0 +1,26 @@
+---
+# tasks 
+#
+- name: add line to /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    # YAML requires escape strings('\') to be enclosed by double-quotes(" ")
+    line: "{{ ELK_Server_Private_IP }}\telk-server.elastic.com"
+    state: present
+
+- name: copy certs & keys to metricbeat
+  copy:
+    src: /tmp/certs
+    dest: /etc/metricbeat/
+    remote_src: no
+
+- name: template to metricbeat.yml of https
+  template:
+    src: metricbeat_client_https.j2
+    dest: /etc/metricbeat/metricbeat.yml
+
+- name: restart metricbeat
+  service:
+    name: metricbeat
+    state: restarted
+

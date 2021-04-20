@@ -1,0 +1,55 @@
+---
+# tasks 
+- name: install zip
+  apt: 
+    name:
+      - zip
+    state: present
+    update_cache: yes
+ 
+- name: add line to /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    # YAML requires escape strings('\') to be enclosed by double-quotes(" ")
+    line: "127.0.0.1\tkibana.local\tlogstash.local"
+    state: present
+
+- name: add line to /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    # YAML requires escape strings('\') to be enclosed by double-quotes(" ")
+    line: "{{ ELK_Server_Private_IP }}\telk-server.elastic.com"
+    state: present
+
+- name: Copy instance.yml to /tmp/
+  copy:
+    src: instance.yml
+    dest: /tmp/instance.yml
+
+- name: generate certs.zip
+  shell:
+    cmd: /usr/share/elasticsearch/bin/elasticsearch-certutil cert --keep-ca-key --pem --in /tmp/instance.yml --out /tmp/certs.zip 
+
+- name: unzip certs.zip
+  shell:
+    cmd: unzip /tmp/certs.zip -d /tmp/certs
+
+- name: copy certs & keys to elasticsearch
+  copy:
+    src: /tmp/certs
+    dest: /etc/elasticsearch/
+    remote_src: yes
+
+- name: template to elasticsearch.yml of https
+  template:
+    src: elasticsearch_server_https.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+
+- name: restart elasticsearch
+  service:
+    name: elasticsearch
+    state: restarted
+
+- name: setup random passwords
+  shell:
+    cmd: echo 'y' | /usr/share/elasticsearch/bin/elasticsearch-setup-passwords auto -u "https://elk-server.elastic.com:9200" > /tmp/passwords 2>&1
